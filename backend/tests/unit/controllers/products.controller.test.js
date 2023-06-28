@@ -47,7 +47,7 @@ describe('Realizando testes da camada products controller', function () {
     expect(res.json).to.have.been.calledWith(productFromModel);
   });
 
-  it('Retorna not found - status 404, ao inserir um id inexistente', async function () {
+  it('Retorna not found / status 404, ao inserir um id inexistente', async function () {
     sinon.stub(productsService, 'getProductsById').resolves(productFromServiceNotFound);
 
     const req = {
