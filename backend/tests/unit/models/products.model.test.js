@@ -24,6 +24,18 @@ describe('Realizando testes da camada products model', function () {
     expect(responseModel).to.be.deep.equal(productFromDb);
   });
 
+  it('Testa se a função insertInto possui o comportamento esperado', async function () {
+    sinon.stub(connection, 'execute').resolves([productFromDb]);
+
+    const productObj = {
+      name: 'Martelo de Thor',
+    };
+
+    const responseModel = await productsModel.insertInto(productObj);
+
+    expect(responseModel).to.be.an('object');
+  });
+
   afterEach(function () {
     sinon.restore();
   });

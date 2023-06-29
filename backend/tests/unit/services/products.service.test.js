@@ -34,6 +34,19 @@ describe('Realizando testes da camada products service', function () {
     expect(responseService.data.message).to.equal('Product not found');
   });
 
+  it('Testa se a função insertProduct retorna o status e data esperados', async function () {
+    sinon.stub(productsModel, 'insertInto').resolves(productFromModel);
+
+    const productObj = {
+      name: 'Martelo de Thor',
+    };
+
+    const responseService = await productsService.insertProduct(productObj);
+
+    expect(responseService.status).to.equal('CREATED');
+    expect(responseService.data).to.be.deep.equal(productFromModel);
+  });
+
   afterEach(function () {
     sinon.restore();
   });
