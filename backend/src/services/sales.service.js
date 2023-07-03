@@ -1,4 +1,5 @@
-const { salesModel } = require('../models');
+const { salesModel, productsModel } = require('../models');
+const { validateSalesFields } = require('./validations/validateSalesFields');
 
 const getAllSales = async () => {
   const data = await salesModel.findAll();
@@ -17,6 +18,22 @@ const getSalesById = async (saleId) => {
 };
 
 const insertSale = async (saleObj) => {
+  const error = validateSalesFields(saleObj);
+
+  if (error) {
+    return { status: error.status, data: { message: error.message } };
+  }
+
+  const products = await Promise.all(saleObj.map(async (sale) => {
+    const result = await productsModel.findById(sale.productId);
+
+    return result;
+  }));
+
+  if (products.some((found) => !found)) {
+    return { status: 'NOT_FOUND', data: { message: 'Product not found' } };
+  }
+
   const data = await salesModel.insertInto(saleObj);
 
   return { status: 'CREATED', data };

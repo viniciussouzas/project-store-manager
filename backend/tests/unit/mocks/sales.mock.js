@@ -64,6 +64,20 @@ const saleInsertFromModel = [
   },
 ];
 
+const saleInvalidInsertFromModel = [
+  {
+    id: 2,
+    itemsSold: [{ productId: 99, quantity: 15 }],
+  },
+];
+
+const saleEmptyInsertFromModel = [
+  {
+    id: 2,
+    itemsSold: [{ quantity: 15 }],
+  },
+];
+
 const saleFromModel = [
   {
     date: DATE_TIME,
@@ -77,6 +91,11 @@ const salesFromServiceNotFound = {
   data: { message: 'message' },
 };
 
+const salesFromServiceRequired = {
+  status: 'REQUIRED_VALUE',
+  data: { message: 'message' },
+};
+
 const salesFromServiceSuccessful = {
   status: 'SUCCESSFUL',
   data: salesFromModel,
@@ -87,14 +106,23 @@ const saleFromServiceSuccessful = {
   data: saleFromModel,
 };
 
+const saleFromServiceCreated = {
+  status: 'CREATED',
+  data: saleInsertFromModel,
+};
+
 module.exports = {
   salesFromDB,
   saleFromDb,
   salesFromModel,
   saleFromModel,
   salesFromServiceNotFound,
+  salesFromServiceRequired,
   saleFromServiceSuccessful,
   salesFromServiceSuccessful,
+  saleFromServiceCreated,
   saleInsertFromDb,
   saleInsertFromModel,
+  saleInvalidInsertFromModel,
+  saleEmptyInsertFromModel,
 };
