@@ -50,6 +50,20 @@ const saleFromDb = [
   },
 ];
 
+const saleInsertFromDb = [
+  {
+    id: 2,
+    itemsSold: [{ productId: 3, quantity: 15 }],
+  },
+];
+
+const saleInsertFromModel = [
+  {
+    id: 2,
+    itemsSold: [{ productId: 3, quantity: 15 }],
+  },
+];
+
 const saleFromModel = [
   {
     date: DATE_TIME,
@@ -81,4 +95,6 @@ module.exports = {
   salesFromServiceNotFound,
   saleFromServiceSuccessful,
   salesFromServiceSuccessful,
+  saleInsertFromDb,
+  saleInsertFromModel,
 };

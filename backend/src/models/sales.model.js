@@ -1,4 +1,7 @@
+const snakeize = require('snakeize');
+
 const connection = require('./connection');
+const { getFormattedPlaceholders } = require('../utils/generateFormattedQuery');
 
 const findAll = async () => {
   const [salesProducts] = await connection.execute(
@@ -23,7 +26,37 @@ const findById = async (saleId) => {
   return salesProduct;
 };
 
+const salesProductsInsert = async (sale, insertId) => {
+  let promises = [];
+
+  const placeholders = getFormattedPlaceholders(sale);
+
+  promises = sale.map((column) => {
+    const columns = Object.keys(snakeize(column)).join(', ');
+    const values = Object.values(column);
+    
+    return connection.execute(`INSERT INTO sales_products (sale_id, ${columns})
+      VALUE (?, ${placeholders});`, [insertId, ...values]);
+  });
+
+  await Promise.all(promises);
+};
+
+const insertInto = async (saleObj) => {
+  const date = new Date();
+
+  const [{ insertId }] = await connection.execute('INSERT INTO sales (date) VALUE (?);', [date]);
+
+  await salesProductsInsert(saleObj, insertId);
+
+  return {
+    id: insertId,
+    itemsSold: saleObj,
+  };
+};
+
 module.exports = {
   findAll,
   findById,
+  insertInto,
 };

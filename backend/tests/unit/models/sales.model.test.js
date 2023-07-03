@@ -2,7 +2,7 @@ const { expect } = require('chai');
 const sinon = require('sinon');
 const connection = require('../../../src/models/connection');
 const { salesModel } = require('../../../src/models');
-const { salesFromDB, saleFromDb } = require('../mocks/sales.mock');
+const { salesFromDB, saleFromDb, saleInsertFromDb } = require('../mocks/sales.mock');
 
 describe('Realizando testes da camada sales model', function () {
   it('Testa se a função findAll possui o comportamento esperado', async function () {
@@ -22,6 +22,19 @@ describe('Realizando testes da camada sales model', function () {
 
     expect(responseModel).to.be.an('array');
     expect(responseModel).to.be.deep.equal(saleFromDb);
+  });
+
+  it('Testa se a função salesProductsInsert e insertInto possuem o comportamento esperado', async function () {
+    sinon.stub(connection, 'execute').resolves([saleInsertFromDb]);
+
+    const saleObj = [{
+      productId: 3, 
+      quantity: 15,
+    }];
+
+    const responseModel = await salesModel.insertInto(saleObj);
+
+    expect(responseModel).to.be.an('object');
   });
 
   afterEach(function () {
