@@ -62,6 +62,10 @@ const productFromServiceCreated = {
   data: productFromModel,
 };
 
+const productFromServiceDeleted = {
+  status: 'DELETED',
+};
+
 module.exports = {
   productsFromDB,
   productFromDb,
@@ -71,4 +75,5 @@ module.exports = {
   productFromServiceSuccessful,
   productsFromServiceSuccessful,
   productFromServiceCreated,
+  productFromServiceDeleted,
 };

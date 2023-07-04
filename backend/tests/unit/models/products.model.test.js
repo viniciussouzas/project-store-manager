@@ -56,6 +56,16 @@ describe('Realizando testes da camada products model', function () {
     });
   });
 
+  it('Testa se a função deleteFrom possui o comportamento esperado', async function () {
+    sinon.stub(connection, 'execute').resolves([productFromDb]);
+
+    const productId = '1';
+
+    const responseModel = await productsModel.deleteFrom(productId);
+
+    expect(responseModel).to.be.deep.equal(undefined);
+  });
+
   afterEach(function () {
     sinon.restore();
   });

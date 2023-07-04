@@ -7,7 +7,7 @@ chai.use(sinonChai);
 
 const { productsService } = require('../../../src/services');
 const { productsController } = require('../../../src/controllers');
-const { productFromServiceSuccessful, productFromModel, productsFromServiceSuccessful, productsFromModel, productFromServiceNotFound, productFromServiceCreated } = require('../mocks/products.mock');
+const { productFromServiceSuccessful, productFromModel, productsFromServiceSuccessful, productsFromModel, productFromServiceNotFound, productFromServiceCreated, productFromServiceDeleted } = require('../mocks/products.mock');
 
 describe('Realizando testes da camada products controller', function () {
   it('Retorna todos os produtos com sucesso, status 200', async function () {
@@ -122,6 +122,41 @@ describe('Realizando testes da camada products controller', function () {
     };
 
     await productsController.updateProduct(req, res);
+
+    expect(res.status).to.have.been.calledWith(404);
+    expect(res.json).to.have.been.calledWith(productFromServiceNotFound.data);
+  });
+
+  it('Retorna DELETED / status 204, ao deletar um produto', async function () {
+    sinon.stub(productsService, 'deleteProduct').resolves(productFromServiceDeleted);
+
+    const req = {
+      params: { productId: 1 },
+    };
+
+    const res = {
+      status: sinon.stub().returnsThis(),
+      json: sinon.stub(),
+    };
+
+    await productsController.removeProduct(req, res);
+
+    expect(res.status).to.have.been.calledWith(204);
+  });
+
+  it('Retorna NOT_FOUND / status 404, ao tentar deletar um produto com id inválido', async function () {
+    sinon.stub(productsService, 'deleteProduct').resolves(productFromServiceNotFound);
+
+    const req = {
+      params: { productId: 99 },
+    };
+
+    const res = {
+      status: sinon.stub().returnsThis(),
+      json: sinon.stub(),
+    };
+
+    await productsController.removeProduct(req, res);
 
     expect(res.status).to.have.been.calledWith(404);
     expect(res.json).to.have.been.calledWith(productFromServiceNotFound.data);
