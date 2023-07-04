@@ -85,6 +85,48 @@ describe('Realizando testes da camada products controller', function () {
     expect(res.json).to.have.been.calledWith(productFromServiceCreated.data);
   });
 
+  it('Retorna SUCCESSFUL / status 200, ao atualizar um produto', async function () {
+    sinon.stub(productsService, 'updtProduct').resolves(productFromServiceSuccessful);
+
+    const req = {
+      params: { productId: 1 },
+      body: {
+        name: 'Martelo de Thor',
+      },
+    };
+
+    const res = {
+      status: sinon.stub().returnsThis(),
+      json: sinon.stub(),
+    };
+
+    await productsController.updateProduct(req, res);
+
+    expect(res.status).to.have.been.calledWith(200);
+    expect(res.json).to.have.been.calledWith(productFromServiceSuccessful.data);
+  });
+
+  it('Retorna NOT_FOUND / status 404, ao tentar atualizar um produto inválido', async function () {
+    sinon.stub(productsService, 'updtProduct').resolves(productFromServiceNotFound);
+
+    const req = {
+      params: { productId: 99 },
+      body: {
+        name: 'Martelo de Thor',
+      },
+    };
+
+    const res = {
+      status: sinon.stub().returnsThis(),
+      json: sinon.stub(),
+    };
+
+    await productsController.updateProduct(req, res);
+
+    expect(res.status).to.have.been.calledWith(404);
+    expect(res.json).to.have.been.calledWith(productFromServiceNotFound.data);
+  });
+
   afterEach(function () {
     sinon.restore();
   });

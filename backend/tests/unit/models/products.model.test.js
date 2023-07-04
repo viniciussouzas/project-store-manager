@@ -25,7 +25,7 @@ describe('Realizando testes da camada products model', function () {
   });
 
   it('Testa se a função insertInto possui o comportamento esperado', async function () {
-    sinon.stub(connection, 'execute').resolves([productFromDb]);
+    sinon.stub(connection, 'execute').resolves([{ insertId: 1 }]);
 
     const productObj = {
       name: 'Martelo de Thor',
@@ -34,6 +34,26 @@ describe('Realizando testes da camada products model', function () {
     const responseModel = await productsModel.insertInto(productObj);
 
     expect(responseModel).to.be.an('object');
+    expect(responseModel.id).to.be.deep.equal(1);
+    expect(responseModel.name).to.be.deep.equal('Martelo de Thor');
+  });
+
+  it('Testa se a função update possui o comportamento esperado', async function () {
+    sinon.stub(connection, 'execute').resolves([productFromDb]);
+
+    const productObj = {
+      name: 'Martelo de Thor',
+    };
+
+    const productId = '1';
+
+    const responseModel = await productsModel.update(productObj, productId);
+
+    expect(responseModel).to.be.an('object');
+    expect(responseModel).to.be.deep.equal({
+      id: 1,
+      name: 'Martelo de Thor',
+    });
   });
 
   afterEach(function () {
